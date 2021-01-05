@@ -11,7 +11,7 @@ import java.util.List;
  */
 public class InitMybatisParams {
 
-    private static String SQL = "List<TaskCard> getSendweekFinishTask(String dateStart, String dateEnd, String publistPerson);";
+    private static String SQL = "List<TaskCard> getAllOverdueTask(String dateStr,String dateStrString dateStr);";
 
     /**
      * 静态量

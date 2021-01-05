@@ -14,16 +14,21 @@ import java.util.Map;
 public class MappingConfig {
 
     // 第一步
-    static String SET_STRING = "projectBugCardVo.setCardId(resultSet.getString(\"cardId\"));\n" +
-            "                        projectBugCardVo.setContent(resultSet.getString(\"content\"));\n" +
-            "                        projectBugCardVo.setDeadLine(resultSet.getString(\"deadLine\"));\n" +
-            "                        projectBugCardVo.setProcess_person(resultSet.getString(\"process_person\"));\n" +
-            "                        projectBugCardVo.setProjectId(resultSet.getString(\"project_id\"));\n" +
-            "                        projectBugCardVo.setProjectName(resultSet.getString(\"projectName\"));\n" +
-            "                        projectBugCardVo.setCardId(resultSet.getString(\"cardId\"));\n" +
-            "                        projectBugCardVo.setStatus(resultSet.getString(\"status\"));\n" +
-            "                        projectBugCardVo.setSubmitter(resultSet.getString(\"submitter\"));\n" +
-            "                        projectBugCardVo.setTitle(resultSet.getString(\"title\"));";
+    static String SET_STRING = "projectAllBugCard.setProjectName(resultSet.getString(\"name\"));\n" +
+            "projectAllBugCard.setProject_id(resultSet.getLong(\"project_id\"));\n" +
+            "projectAllBugCard.setUpdateTime(resultSet.getDate(\"update_time\"));\n" +
+            "projectAllBugCard.setSortNum(resultSet.getFloat(\"sort_num\"));\n" +
+            "projectAllBugCard.setProcessPerson(resultSet.getString(\"process_person\"));\n" +
+            "projectAllBugCard.setPublishPerson(resultSet.getString(\"publish_person\"));\n" +
+            "projectAllBugCard.setStatus(resultSet.getString(\"status\"));\n" +
+            "projectAllBugCard.setDeadLine(resultSet.getDate(\"dead_line\"));\n" +
+            "projectAllBugCard.setContent(resultSet.getString(\"content\"));\n" +
+            "projectAllBugCard.setTitle(resultSet.getString(\"title\"));\n" +
+            "projectAllBugCard.setListId(resultSet.getLong(\"list_id\"));\n" +
+            "projectAllBugCard.setCardId(resultSet.getLong(\"card_id\"));\n" +
+            "projectAllBugCard.setCounts(resultSet.getLong(\"counts\"));\n" +
+            "projectAllBugCard.setList_title(resultSet.getString(\"list_title\"));\n" +
+            "projectAllBugCard.setProgress(resultSet.getInt(\"progress\"));";
 
     static Map<String,String> JDBC_TYPE_MAP = new HashMap<String,String>(){{
         put("Long","LONGVARCHAR");
@@ -35,12 +40,12 @@ public class MappingConfig {
     }};
 
     // 第二步，去除前缀 比如输入tcp.setProjectName 则输入 tcp.set
-    static String BEFORE = "projectBugCardVo.set";
+    static String BEFORE = "projectAllBugCard.set";
 
     // 第三步，输入两个必要参数
-    // 如 <resultMap id="getTaskCardBetweenDayMap" type="org.iwown.oa.dal.model.TaskCardPure">
-    static String RESULT_MAP_ID = "projectBugCardVoMap";
-    static String RESULT_MAP_TYPE = "org.iwown.oa.dal.model.ProjectBugCardVo";
+    // 如 <resultMap id="getBugFeedBackFixedMap" type="org.iwown.oa.dal.model.TaskCardPure">
+    static String RESULT_MAP_ID = "projectAllBugCardMap";
+    static String RESULT_MAP_TYPE = "org.iwown.oa.dal.model.ProjectAllBugCard";
 
     // 静态量
     static String LEFT = "(";

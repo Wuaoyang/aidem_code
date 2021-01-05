@@ -1,7 +1,7 @@
 package Test;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.text.ParseException;
+import java.util.Arrays;
 
 /**
  * xxxxxxxxxxxx
@@ -11,73 +11,57 @@ import java.util.List;
  */
 public class test {
 
-    public static void main(String[] args) {
-        System.out.println(lengthOfLongestSubstring("^"));
+    public static void main(String[] args) throws ParseException {
+
+        int [] intt = new int[]{1,2,3,4,5};
+        int[] s = Arrays.copyOfRange(intt, 1, 2);
+        for (int i : s) {
+            System.out.print(i);
+        }
+
 
     }
 
-    /**
-     * 第一版本
-     * @param s
-     * @return
-     */
-    public static int lengthOfLongestSubstring1(String s) {
-        /**
-         * 使用list，当成栈结构，每次入栈判断是否已经存在有重复的
-         * 有的话清空栈中该值之前包括该值的所有值，加入新的值
-         * 如果没有则直接入栈，最后判断栈空间大小即可
-         */
-        int maxLength = 0;
-        List<String> temp = new ArrayList();
-        if (s == null || s.length() == 0) {
-            return 0;
+
+    public static String longestPalindrome(String s) {
+        // 暴力拆解
+        String zero = "";
+        // 排除特殊情况
+        if (s == null) {
+            return zero;
         }
-        int tempSize, sLength = s.length();
-        for (int i = 0; i < sLength; i++) {
-            // 遍历每个值
-            String c = String.valueOf(s.charAt(i));
-            if (!temp.contains(c)) {
-                temp.add(c);
-            } else {
-                tempSize = temp.size();
-                for (int j = 0; j < tempSize; j++) {
-                    if (temp.get(j).equals(c)) {
-                        temp = temp.subList(j + 1, tempSize);
-                        temp.add(c);
-                        break;
+        int length = s.length();
+        if (length == 0 || length == 1) {
+            return s;
+        }
+        if (length == 2) {
+            return s.charAt(0) == (s.charAt(1)) ? String.valueOf(s.charAt(0)) + String.valueOf(s.charAt(0)) : zero;
+        }
+        // 开始真正的暴力
+        int maxLength = 0, left, right;
+        String temp, result = zero;
+        for (int i = 0; i < length; i++) {
+            temp = zero;
+            left = i;
+            right = i;
+            while (left != -1 && right != length - 1) {
+                char leftChar = s.charAt(left);
+                if (leftChar == (s.charAt(right))) {
+                    if (temp.equals(zero)) {
+                        temp = String.valueOf(leftChar);
+                    } else {
+                        temp = leftChar + temp + leftChar;
                     }
                 }
+                left--;
+                right++;
             }
-            maxLength = Math.max(maxLength,temp.size());
-        }
-        return maxLength;
-    }
-
-    public static int lengthOfLongestSubstring(String s) {
-        /**
-         * 使用list，当成栈结构，每次入栈判断是否已经存在有重复的
-         * 有的话清空栈中该值之前包括该值的所有值，加入新的值
-         * 如果没有则直接入栈，最后判断栈空间大小即可
-         */
-        int maxLength = 0;
-        List<String> temp = new ArrayList();
-        if (s == null || s.length() == 0) {
-            return 0;
-        }
-        int  sLength = s.length();
-        for (int i = 0; i < sLength; i++) {
-            // 遍历每个值
-            String c = String.valueOf(s.charAt(i));
-            if (!temp.contains(c)) {
-                temp.add(c);
-            } else {
-                while (temp.contains(c)){
-                    temp.remove(0);
-                }
-                temp.add(c);
+            int tempLength = temp.length();
+            if (tempLength > maxLength) {
+                maxLength = tempLength;
+                result = temp;
             }
-            maxLength = Math.max(maxLength,temp.size());
         }
-        return maxLength;
+        return result;
     }
 }

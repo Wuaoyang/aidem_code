@@ -17,10 +17,27 @@ public class InitSql {
 
         StringBuilder sb = new StringBuilder();
         StringBuilder sb1 = new StringBuilder();
+
+
         // 根据情况替换，从自动生成的Base那边复制过来即可
-        String s = "detail_id, document_id, project_id, module_id, module_title, column_title_1, column_title_2,\n" +
-                "    column_title_3, column_title_4, column_title_5, column_title_6, column_title_7, column_title_8,\n" +
-                "    update_time, user_name, sid";
+        // 仅仅替换这里    Base_Column_List
+        String s = "id,\n" +
+                "                year,\n" +
+                "                month,\n" +
+                "                day,\n" +
+                "                hour,\n" +
+                "                min,\n" +
+                "                second,\n" +
+                "                device_id,\n" +
+                "                type,\n" +
+                "                status,\n" +
+                "                start_seq,\n" +
+                "                end_seq,\n" +
+                "                create_time,\n" +
+                "                update_time";
+
+
+
         // 生成两段sql标签，直接从控制台拷贝过去
         String[] split = s.split(",");
         for (String s1 : split) {

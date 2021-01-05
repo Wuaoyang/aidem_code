@@ -11,9 +11,9 @@ import java.util.List;
  */
 public class HandleTaskSql {
 
-    private static String SQL = "select * from task_card where update_time >= ? and update_time <= ? and status = '已完成' and publish_person =?";
+    private static String SQL = "select * from need_card where dead_line < ? and status != '已完成' and status != '挂起' and status != '未接收' and status != '已关闭'";
 
-    private static String SET_STARING = "ps.setString(1, dateStart);=ps.setString(2, dateEnd);=ps.setString(3, publistPerson);";
+    private static String SET_STARING = "ps.setString(1, dateStr);";
 
     public static void main(String[] args) {
         SQL = SQL.replace("<","&lt;").replace("+","").replace("\"","");
