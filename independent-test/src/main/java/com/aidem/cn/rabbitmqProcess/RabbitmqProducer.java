@@ -8,6 +8,8 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 
 /**
@@ -48,5 +50,17 @@ public class RabbitmqProducer implements RabbitTemplate.ConfirmCallback {
         } else {
             logger.info("消息发送失败");
         }
+    }
+
+    //时间 出生日期计算年龄
+    public static void main(String[] args) {
+        Date date = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String dates = sdf.format(date);
+        String birth = "1997-06-29 11:12:51";
+        int age = Integer.valueOf(dates.substring(0, 4)) - Integer.valueOf(birth.substring(0, 4));
+        if (dates.compareTo(birth) < 0)
+            age--;
+        System.out.println("age : " + age);
     }
 }

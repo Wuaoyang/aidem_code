@@ -27,7 +27,7 @@ public class MqttProduceCallbackConfig implements MqttCallback {
     }
 
     public void deliveryComplete(IMqttDeliveryToken token) {
-        System.out.println("发布到mqtt，qos为1，消息发布回调状态:" + token.isComplete());
+        System.out.println("发布到mqtt，qos为0，消息发布回调状态:" + token.isComplete());
     }
 
     public void messageArrived(String topic, MqttMessage message) throws Exception {

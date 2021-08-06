@@ -1,4 +1,4 @@
-package utils;
+package com.aidem.cn.utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;

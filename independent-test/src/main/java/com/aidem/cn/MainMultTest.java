@@ -19,7 +19,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest
-public class MainTest {
+public class MainMultTest {
 
     @Autowired
     private MqttProducer mqttProducer;
@@ -38,16 +38,9 @@ public class MainTest {
         byte[] bytetwo = new byte[]{68, 84};
         // 构造消息体
         HisDataOuterClass.HisNotification.Builder builder = HisDataOuterClass.HisNotification.newBuilder();
-        HisDataOuterClass.HisIndex.Builder builder1 = HisDataOuterClass.HisIndex.newBuilder();
-        builder1.setStartSeq(0);
-        builder1.setEndSeq(13);
-        RealtimeData.RtData.Builder builder2 = RealtimeData.RtData.newBuilder();
-        RealtimeData.RtTime.Builder builder3 = RealtimeData.RtTime.newBuilder();
-        builder3.setSeconds(1609828773);
-        builder2.setTime(builder3);
-        builder1.setTime(builder2.getTime());
         HisDataOuterClass.HisIndexTable.Builder indexBuilder = HisDataOuterClass.HisIndexTable.newBuilder();
-        indexBuilder.addIndex(builder1);
+        indexBuilder.addIndex(buildIndex(0, 13, 1625279039));
+        indexBuilder.addIndex(buildIndex(0, 12, 1609915173));
         builder.setIndexTable(indexBuilder);
         builder.setType(HisDataOuterClass.HisDataType.HEALTH_DATA);
         // indexTable
@@ -59,6 +52,57 @@ public class MainTest {
         mqttProducer.publish(mqttConfig.getUploadTopic(), null, resultBytes);
     }
 
+    /**
+     * 构造index
+     *
+     * @param start
+     * @param end
+     * @param second
+     * @return
+     */
+    private HisDataOuterClass.HisIndex.Builder buildIndex(int start, int end, int second) {
+        HisDataOuterClass.HisIndex.Builder builder1 = HisDataOuterClass.HisIndex.newBuilder();
+        builder1.setStartSeq(start);
+        builder1.setEndSeq(end);
+        RealtimeData.RtData.Builder builder2 = RealtimeData.RtData.newBuilder();
+        RealtimeData.RtTime.Builder builder3 = RealtimeData.RtTime.newBuilder();
+        builder3.setSeconds(second);
+        builder2.setTime(builder3);
+        builder1.setTime(builder2.getTime());
+        return builder1;
+    }
+
+// ====================================================================================================
+
+    /**
+     * 模拟固件发送的health indexTable 数据
+     */
+    @Test
+    public void sendHealthIndextable() {
+//        String deviceId = "352099001761491";
+        String deviceId = "352099001761565";
+        byte[] byteone = deviceId.getBytes();
+        // 固定DT
+        byte[] bytetwo = new byte[]{68, 84};
+        HisDataOuterClass.HisNotification.Builder hisData = HisDataOuterClass.HisNotification.newBuilder();
+        HisDataOuterClass.HisIndexTable.Builder hisindexTable = HisDataOuterClass.HisIndexTable.newBuilder();
+        HisDataOuterClass.HisIndex.Builder hisIndex = HisDataOuterClass.HisIndex.newBuilder();
+        RealtimeData.RtTime.Builder rttime = RealtimeData.RtTime.newBuilder();
+        rttime.setSeconds(1625452671);
+        hisIndex.setTime(rttime);
+        hisIndex.setStartSeq(0);
+        hisIndex.setEndSeq(1);
+        hisindexTable.addIndex(hisIndex);
+        hisData.setType(HisDataOuterClass.HisDataType.HEALTH_DATA);
+        hisData.setIndexTable(hisindexTable);
+        // details
+        byte[] bytethree = hisData.build().toByteArray();
+        // len + crt + opt
+        int length = bytethree.length;
+        byte[] bytefore = new byte[]{(byte) length, 0, 105, -82, -128, 0};
+        byte[] resultBytes = doConcat(doConcat(doConcat(byteone, bytetwo), bytefore), bytethree);
+        mqttProducer.publish(mqttConfig.getUploadTopic(), null, resultBytes);
+    }
 
     /**
      * 模拟固件发送的 health details 数据
@@ -66,7 +110,7 @@ public class MainTest {
     @Test
     public void sendHealthDetails() {
         // 前15位 设备号
-        String deviceId = "352099001761481";
+        String deviceId = "352099001761565";
         byte[] byteone = deviceId.getBytes();
         // 固定DT
         byte[] bytetwo = new byte[]{68, 84};
@@ -78,7 +122,7 @@ public class MainTest {
         HisHealthData.HisDataHealth.Builder builder2 = HisHealthData.HisDataHealth.newBuilder();
         RealtimeData.DateTime.Builder builder3 = RealtimeData.DateTime.newBuilder();
         RealtimeData.RtTime.Builder builder4 = RealtimeData.RtTime.newBuilder();
-        builder4.setSeconds(1609828773);
+        builder4.setSeconds(1625452671);
         builder3.setDateTime(builder4);
         builder3.setTimeZone(0);
         // timeStamp
@@ -151,7 +195,7 @@ public class MainTest {
         HisHealthData.HisHealthBOxy.Builder builder15 = HisHealthData.HisHealthBOxy.newBuilder();
         builder15.setMinOxy(5513);
         builder15.setMaxOxy(5518);
-             //  todo ?  agv?
+        //  todo ?  agv?
         builder15.setAgvOxy(5519);
         builder2.setBxoyData(builder15);
         // HisHealthTemp  temperature_data
@@ -182,16 +226,5 @@ public class MainTest {
         System.arraycopy(b, 0, result, a.length, b.length);
         return result;
     }
-
-    /**
-     * 清空消息的默认接收消息
-     */
-    @Test
-    public void clearRetanis(){
-        mqttProducer.publish(mqttConfig.getUploadTopic(),"",null);
-        mqttProducer.publish("d1pro-352099001761481","",null);
-
-    }
-
 
 }
